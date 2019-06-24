@@ -1,0 +1,19 @@
+{
+    "PySaw": {
+        "Core": {},
+        "Console": {
+            "Levels": [
+                "Debug",
+                "information"
+            ],
+            "MessageTemplate": "[$$Level$$] $$Message$$"
+        },
+        "Txt": {
+            "Levels": [
+                "Debug",
+                "Information"
+            ],
+            "MessageTemplate": "$$Message$$"
+        }
+    }
+}
