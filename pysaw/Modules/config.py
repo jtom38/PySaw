@@ -47,8 +47,15 @@ class Config:
                         "Debug",
                         "Information"
                     ],
-                    'MessageTemplate': "$$Message$$"
-                } 
+                    'MessageTemplate': "[$$Level$$] - $$Message$$ - $$FileName$$ - $$MethodName$$ - $$LineNumber$$"
+                },
+                'CSV':{
+                    'Levels': [
+                        "Debug",
+                        "Information"
+                    ]
+                },
+                "Template": '$$Level$$, $$Message$$, $$FileName$$, $$MethodName$$, $$LineNumber$$'
             }
         }
         return obj

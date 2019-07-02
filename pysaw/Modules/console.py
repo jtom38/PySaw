@@ -1,7 +1,8 @@
 
+from .baseModule import baseEndPoint
 from .config import Config
 
-class Console:
+class Console(baseEndPoint):
     def __init__(self, Config: Config ):
         self.Config = Config
         pass
@@ -20,7 +21,7 @@ class Console:
         if level != "":
             return self.__IsValidLevel(level)
         
-        return True
+        return False
 
     def __IsValidLevel(self, level: str):
         # Exctract the allowed levels we will log
@@ -38,6 +39,17 @@ class Console:
         # If all of them did not match, return False
         return False
 
+    def __FormatMessage(self):
+        f:str = self.Config.ActiveConfig['PySaw']['Console']['MessageTemplate']
+
+        if f.__contains__('$$Level$$') == True:
+            f = f.replace('$$Level$$', self.level)
+
+        if f.__contains__('$$Message$$') == True:
+            f = f.replace('$$Message$$', self.message)
+
+        return f
+
     def Write(self, level: str, message: str, passBack:bool = False):
         """
         Writes the message that is sent to the console window
@@ -53,7 +65,13 @@ class Console:
             This was added to help test the function.
         """
 
-        msg = f"[{level}] {message}"
+        self.level = level
+        self.message = message
+
+        msg:str = self.__FormatMessage()
+
+        
+
         print(msg)
 
         if(passBack == True):

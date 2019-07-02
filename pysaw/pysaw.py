@@ -1,5 +1,7 @@
 import typing
 import os
+import inspect
+import sys
 
 from .Modules.config import Config
 from .Modules.console import Console
@@ -37,8 +39,7 @@ class pysaw:
 
         # Now that we have the config in memory, pass the config class to the Console EndPoint so it knows about its config. 
         self.__console = Console(self.__config)
-        #if os.path.exists(PathConfig):
-            #self.LoadConfig(PathConfig)
+        
         pass
     
     def __LoadConfig(self, PathConfig: str):
@@ -119,6 +120,14 @@ class pysaw:
 
         Debug("This is a test")
         """
+        ins = inspect.stack()[1]
+        lineNum: int = inspect.stack()[1].lineno
+        filePath: str = inspect.stack()[1].filename
+        method = inspect.stack()[1].function
+
+        fileName = os.path.basename(filePath)
+
+
         self.__LogMessage("Debug", message)
     
     def __LogMessage(self, level: str, message: str):
@@ -127,7 +136,7 @@ class pysaw:
 
         """
         if self.__console.isValidEndpoint(level=level) == True:
-            self.__console.Write(level, message)               
-
+            self.__console.Write(level, message)
+    
 if __name__ == '__main__':
     pysaw

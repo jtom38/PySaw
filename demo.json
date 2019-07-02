@@ -3,6 +3,7 @@
         "Core": {},
         "Console": {
             "Levels": [
+                "Emergency",
                 "Debug",
                 "information"
             ],
