@@ -1,14 +1,15 @@
 
+from ..Core.message import Message
 
 class baseEndPoint:
 
-    def isValidEndpoint(self, level: str = ''):
+    def isValidEndpoint(self):
         pass
     
-    def __isValidLevel(self, level: str):
+    def __isValidLevel(self):
         pass
 
-    def Write(self, level:str, message:str, passBack:bool = False):
+    def Write(self):
         pass
 
 if __name__ == "__main__":

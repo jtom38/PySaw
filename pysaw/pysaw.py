@@ -5,6 +5,7 @@ import sys
 
 from .Modules.config import Config
 from .Modules.console import Console
+from .Core.message import Message
 #from txt import Txt
 
 class pysaw:
@@ -75,44 +76,44 @@ class pysaw:
         """
         Logs a message about events that relate to unusable actions.
         """
-        self.__LogMessage("Emergency", message)
+        #self.__LogMessage("Emergency", message)
 
     def Alert(self, message: str):
         """
         Logs a message about events that require immediate action.
         """
-        self.__LogMessage("Alert", message)
+        #self.__LogMessage("Alert", message)
 
     def Critical(self, message: str):
         """
         Logs a message about events that refer to critical actions.
         """
-        self.__LogMessage("Critical", message)
+        #self.__LogMessage("Critical", message)
 
     def Error(self, message: str):
         """
         Logs a message about events that need to be reviewed.
         Use to monitor Try/Except messages.       
         """
-        self.__LogMessage("Error", message)
+        #self.__LogMessage("Error", message)
 
     def Warning(self, message: str):
         """
         Logs a message about events that could still work but not expected results.
         """
-        self.__LogMessage("Warning", message)
+        #self.__LogMessage("Warning", message)
 
     def Notice(self, message: str):
         """
         Logs a message about events that are not errors but not expected results.        
         """
-        self.__LogMessage("Notice", message)
+        #self.__LogMessage("Notice", message)
 
     def Information(self, message: str):
         """
         Logs a message about events that contain information.
         """
-        self.__LogMessage("Information", message)
+        #self.__LogMessage("Information", message)
 
     def Debug(self, message: str):
         """
@@ -127,16 +128,23 @@ class pysaw:
 
         fileName = os.path.basename(filePath)
 
+        msg = Message()
+        msg.Level = "Debug"
+        msg.Message = message
+        msg.FileName = fileName
+        msg.LineNumber = lineNum
+        msg.MethodName = method
 
-        self.__LogMessage("Debug", message)
+        self.__LogMessage(msg)
+
     
-    def __LogMessage(self, level: str, message: str):
+    def __LogMessage(self, msg:Message):
         """
         Hidden method that will check all endpoints to see if they will accept the current message.
 
         """
-        if self.__console.isValidEndpoint(level=level) == True:
-            self.__console.Write(level, message)
+        if self.__console.isValidEndpoint(msg.Level) == True:
+            self.__console.Write(msg)
     
 if __name__ == '__main__':
     pysaw

@@ -2,12 +2,21 @@
 from .baseModule import baseEndPoint
 from .config import Config
 
+from ..Core.message import Message
+
 class Console(baseEndPoint):
+    """
+    About:
+
+    """
     def __init__(self, Config: Config ):
         self.Config = Config
         pass
 
-    def isValidEndpoint(self, level: str = ""):
+    # Replaceable property that we can load new messages into.
+    __msg:Message
+
+    def isValidEndpoint(self, level:str):
         """
         About:
         returns bool that states if the endpoint has a valid configuration to be able to handle messages.
@@ -19,38 +28,45 @@ class Console(baseEndPoint):
         """
         
         if level != "":
-            return self.__IsValidLevel(level)
+            # Exctract the allowed levels we will log
+            levels = self.Config.ActiveConfig['PySaw']['Console']['Levels']
+
+            # Loop though all of the values we will accept
+            for v in levels:
+
+                # Check each level against what was sent
+                if level == v:
+                    
+                    # If we have a match return True
+                    return True
         
-        return False
-
-    def __IsValidLevel(self, level: str):
-        # Exctract the allowed levels we will log
-        levels = self.Config.ActiveConfig['PySaw']['Console']['Levels']
-
-        # Loop though all of the values we will accept
-        for v in levels:
-
-            # Check each level against what was sent
-            if level == v:
-                
-                # If we have a match return True
-                return True
-
-        # If all of them did not match, return False
         return False
 
     def __FormatMessage(self):
         f:str = self.Config.ActiveConfig['PySaw']['Console']['MessageTemplate']
 
         if f.__contains__('$$Level$$') == True:
-            f = f.replace('$$Level$$', self.level)
+            f = f.replace('$$Level$$', self.__msg.Level)
 
         if f.__contains__('$$Message$$') == True:
-            f = f.replace('$$Message$$', self.message)
+            f = f.replace('$$Message$$', self.__msg.Message)
+
+        if f.__contains__('$$Line$$') == True:
+            f = f.replace('$$Line$$', str(self.__msg.LineNumber))
+
+        if f.__contains__('$$File$$') == True:
+            f = f.replace('$$File$$', self.__msg.FileName)
+
+        if f.__contains__('$$Method$$') == True:
+
+            if not self.__msg.MethodName.__eq__('<module>'):
+                f = f.replace('$$Method$$', self.__msg.MethodName)
+            else:
+                f = f.replace('$$Method$$', '')
 
         return f
 
-    def Write(self, level: str, message: str, passBack:bool = False):
+    def Write(self, msg:Message, passBack:bool = False):
         """
         Writes the message that is sent to the console window
 
@@ -65,17 +81,13 @@ class Console(baseEndPoint):
             This was added to help test the function.
         """
 
-        self.level = level
-        self.message = message
-
-        msg:str = self.__FormatMessage()
-
+        self.__msg = msg
+        s:str = self.__FormatMessage()
         
-
-        print(msg)
+        print(s)
 
         if(passBack == True):
-            return msg
+            return s
 
         pass
 

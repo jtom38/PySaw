@@ -1,2 +1,2 @@
 
-from .format import FormatMessage
+from .message import Message

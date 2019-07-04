@@ -47,7 +47,7 @@ class Config:
                         "Debug",
                         "Information"
                     ],
-                    'MessageTemplate': "[$$Level$$] - $$Message$$ - $$FileName$$ - $$MethodName$$ - $$LineNumber$$"
+                    'MessageTemplate': "[$$Level$$] - $$Message$$ - $$File$$ - $$Method$$ - $$Line$$"
                 },
                 'CSV':{
                     'Levels': [
@@ -55,12 +55,12 @@ class Config:
                         "Information"
                     ]
                 },
-                "Template": '$$Level$$, $$Message$$, $$FileName$$, $$MethodName$$, $$LineNumber$$'
+                "Template": '$$Level$$, $$Message$$, $$File$$, $$Method$$, $$Line$$'
             }
         }
         return obj
 
-    def NewConfig(self, PathConifg: str, OverWrite: bool = False):
+    def NewConfig(self, PathConfig: str, OverWrite: bool = False):
         """
         About:
         This will generate a base configuration file when requested.
@@ -74,17 +74,17 @@ class Config:
 
         baseconfig: str = self.__baseJson()
 
-        PathValid = os.path.exists(PathConifg)
+        PathValid = os.path.exists(PathConfig)
 
         if PathValid == False:
-            with open(PathConifg, 'w') as f:
+            with open(PathConfig, 'w') as f:
                 json.dump(baseconfig, f, indent=4)
             return
 
         if PathValid == True and OverWrite == True:
             # Write over the existing file and start is a new
-            os.remove(PathConifg)
-            with open(PathConifg, 'w') as f:
+            os.remove(PathConfig)
+            with open(PathConfig, 'w') as f:
                 json.dump(baseconfig, f, indent=4)
 
             return

@@ -4,6 +4,8 @@ import pysaw
 from pysaw.Modules.console import Console
 from pysaw.Modules.config import Config
 
+from pysaw.Core.message import Message
+
 def testConsoleConfigNoFile():
     """
     Tests Console logger to make sure the base line config is valid.
@@ -43,18 +45,119 @@ def testLoadedConfigEmergency():
 
     if valid == True:
         assert True
-    else:
-        assert False
+#    else:
+#        assert False
 
-def testConsole():
-    # Generate a basic Config class
+def testConsoleDebug():
     cfg = Config()
+    cfg.ActiveConfig['PySaw']['Console']['Levels'] = ['Debug']
+    cfg.ActiveConfig['PySaw']['Console']['MessageTemplate'] = '$$Level$$ $$Message$$'
 
-    # Pass the config class into console so it knows about the active config
-    cmd = Console(cfg)
+    msg = Message()
+    msg.Message = "Test"
+    msg.Level = "Debug"
 
-    # Generate a message
-    msg = cmd.Write("Test", "test", True)
+    con = Console(cfg)
+    if con.isValidEndpoint(msg.Level) == False:
+        assert False
+    else:
+        res = con.Write(msg, passBack=True)
+        assert res == 'Debug Test'
+
+
+def testConsoleEmergency():
+    cfg = Config()
+    cfg.ActiveConfig['PySaw']['Console']['Levels'] = ['Emergency']
+    cfg.ActiveConfig['PySaw']['Console']['MessageTemplate'] = '$$Level$$ $$Message$$'
+
+    msg = Message()
+    msg.Message = "Test"
+    msg.Level = "Emergency"
+
+    con = Console(cfg)
+    if con.isValidEndpoint(msg.Level) == False:
+        assert False
+    else:
+        res = con.Write(msg, passBack=True)
+        assert res == 'Emergency Test'
+
+
+def testConsoleAlert():
+    cfg = Config()
+    cfg.ActiveConfig['PySaw']['Console']['Levels'] = ['Alert']
+    cfg.ActiveConfig['PySaw']['Console']['MessageTemplate'] = '$$Level$$ $$Message$$'
+
+    msg = Message()
+    msg.Message = "Test"
+    msg.Level = "Alert"
+
+    con = Console(cfg)
+    if con.isValidEndpoint(msg.Level) == False:
+        assert False
+    else:
+        res = con.Write(msg, passBack=True)
+        assert res == 'Alert Test'
+
+def testConsoleCritical():
+    cfg = Config()
+    cfg.ActiveConfig['PySaw']['Console']['Levels'] = ['Critical']
+    cfg.ActiveConfig['PySaw']['Console']['MessageTemplate'] = '$$Level$$ $$Message$$'
+
+    msg = Message()
+    msg.Message = "Test"
+    msg.Level = "Critical"
+
+    con = Console(cfg)
+    if con.isValidEndpoint(msg.Level) == False:
+        assert False
+    else:
+        res = con.Write(msg, passBack=True)
+        assert res == 'Critical Test'
+
+def testConsoleError():
+    cfg = Config()
+    cfg.ActiveConfig['PySaw']['Console']['Levels'] = ['Error']
+    cfg.ActiveConfig['PySaw']['Console']['MessageTemplate'] = '$$Level$$ $$Message$$'
+
+    msg = Message()
+    msg.Message = "Test"
+    msg.Level = "Error"
+
+    con = Console(cfg)
+    if con.isValidEndpoint(msg.Level) == False:
+        assert False
+    else:
+        res = con.Write(msg, passBack=True)
+        assert res == 'Error Test'
     
-    # Test the message
-    assert msg == "[Test] test"
+def testConsoleWarning():
+    cfg = Config()
+    cfg.ActiveConfig['PySaw']['Console']['Levels'] = ['Warning']
+    cfg.ActiveConfig['PySaw']['Console']['MessageTemplate'] = '$$Level$$ $$Message$$'
+
+    msg = Message()
+    msg.Message = "Test"
+    msg.Level = "Warning"
+
+    con = Console(cfg)
+    if con.isValidEndpoint(msg.Level) == False:
+        assert False
+    else:
+        res = con.Write(msg, passBack=True)
+        assert res == 'Warning Test'
+
+def testConsoleInformation():
+    cfg = Config()
+    cfg.ActiveConfig['PySaw']['Console']['Levels'] = ['Information']
+    cfg.ActiveConfig['PySaw']['Console']['MessageTemplate'] = '$$Level$$ $$Message$$'
+
+    msg = Message()
+    msg.Message = "Test"
+    msg.Level = "Information"
+
+    con = Console(cfg)
+    if con.isValidEndpoint(msg.Level) == False:
+        assert False
+    else:
+        res = con.Write(msg, passBack=True)
+        assert res == 'Information Test'

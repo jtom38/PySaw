@@ -7,14 +7,14 @@
                 "Debug",
                 "information"
             ],
-            "MessageTemplate": "[$$Level$$] $$Message$$"
+            "MessageTemplate": "[$$Level$$] $$Message$$ $$File$$ $$Line$$ $$Method$$"
         },
         "Txt": {
             "Levels": [
                 "Debug",
                 "Information"
             ],
-            "MessageTemplate": "$$Message$$"
+            "MessageTemplate": "$$Level$$ $$Message$$ $$File$$ $$Line$$ $$Method$$"
         }
     }
 }
