@@ -1,6 +1,6 @@
 
 from .baseModule import baseEndPoint
-from .config import Config
+from ..Core.config import Config
 
 # PySaw modules to handle txt files
  

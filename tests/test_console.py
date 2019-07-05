@@ -1,16 +1,20 @@
 import pytest
 
-import pysaw
-from pysaw.Modules.console import Console
-from pysaw.Modules.config import Config
+# Import the primary class
+from pysaw.pysaw import pysaw
 
+# Import single classes for focus testing
+from pysaw.Modules.console import Console
+#from pysaw.Modules.config import Config
 from pysaw.Core.message import Message
 
 def testConsoleConfigNoFile():
     """
     Tests Console logger to make sure the base line config is valid.
     """
-    cfg = Config()
+    logger = pysaw("")
+    logger.Console.isValidEndpoint("Debug")
+
     con = Console(cfg)
 
     res = con.isValidEndpoint("Debug")
@@ -24,7 +28,10 @@ def testBaseConfigEmergency():
     This method will test the base config.  
     This one should fail to be pass.
     """
-    cfg = Config()
+    logger = pysaw("")
+    logger.Console.Levels = ['Debug']
+    logger.Console.isValidEndpoint("Debug")
+    
     cmd = Console(cfg)
     valid = cmd.isValidEndpoint(level="Emergency")
 
@@ -64,7 +71,6 @@ def testConsoleDebug():
         res = con.Write(msg, passBack=True)
         assert res == 'Debug Test'
 
-
 def testConsoleEmergency():
     cfg = Config()
     cfg.ActiveConfig['PySaw']['Console']['Levels'] = ['Emergency']
@@ -80,7 +86,6 @@ def testConsoleEmergency():
     else:
         res = con.Write(msg, passBack=True)
         assert res == 'Emergency Test'
-
 
 def testConsoleAlert():
     cfg = Config()
@@ -147,11 +152,12 @@ def testConsoleWarning():
         assert res == 'Warning Test'
 
 def testConsoleInformation():
+
     cfg = Config()
     cfg.ActiveConfig['PySaw']['Console']['Levels'] = ['Information']
     cfg.ActiveConfig['PySaw']['Console']['MessageTemplate'] = '$$Level$$ $$Message$$'
 
-    msg = Message()
+    msg = Message('Test', 'Test' )
     msg.Message = "Test"
     msg.Level = "Information"
 
@@ -161,3 +167,7 @@ def testConsoleInformation():
     else:
         res = con.Write(msg, passBack=True)
         assert res == 'Information Test'
+
+#def testPySawConsoleDebug():
+	#logger = pysaw("")
+	#logger.Level

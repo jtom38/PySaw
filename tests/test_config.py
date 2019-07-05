@@ -1,7 +1,7 @@
 import pytest
 
 #import pysaw
-from pysaw.Modules.config import Config
+from pysaw.Core.config import Config
 
 def testInitNoFile():
     # Generate a Config without a file...

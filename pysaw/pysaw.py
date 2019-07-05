@@ -1,16 +1,16 @@
 import typing
+import json
 import os
 import inspect
 import sys
 
-from .Modules.config import Config
 from .Modules.console import Console
 from .Core.message import Message
 #from txt import Txt
 
 class pysaw:
     """
-    PySaw is the gateway class to your logging needs
+    PySaw is the gateway class to your logging needs.
 
     Attributes:
         PathConfig: str
@@ -30,23 +30,33 @@ class pysaw:
 
     def __init__(self, PathConfig: str):
 
-        configExists = os.path.exists(PathConfig)
+        # Check to see if we can find the config file
+        if os.path.exists(PathConfig):
 
-        if PathConfig != "" and configExists == True:
+            # Open the file, read it and store in memory
+            with open(PathConfig) as jsonFile:
+                try:
+                    self.__ActiveConfig = json.load(jsonFile)
+                except Exception:
+                    print(f"Failed to read {PathConfig}")
+
+
+        #if PathConfig != "" and configExists == True:
             # Generate a new instace of our Config with the path we have been given
-            self.__config = Config(PathConfig=PathConfig)
-        else:
-            self.__config = Config(PathConfig="")
+         #   self.Config = Config(PathConfig=PathConfig)
+        #else:
+        #    self.Config = Config(PathConfig="")
 
-        # Now that we have the config in memory, pass the config class to the Console EndPoint so it knows about its config. 
-        self.__console = Console(self.__config)
+        # Generate the endpoint classes 
+        self.Console = Console(self.__ActiveConfig)
         
         pass
-    
+
     def __LoadConfig(self, PathConfig: str):
         """
         Been replaced by init handling the config
         """
+      
         result = os.path.exists(PathConfig)
         if result == True:
             # Take in the config and load values
@@ -124,27 +134,20 @@ class pysaw:
         ins = inspect.stack()[1]
         lineNum: int = inspect.stack()[1].lineno
         filePath: str = inspect.stack()[1].filename
-        method = inspect.stack()[1].function
+        method:str = inspect.stack()[1].function
+        fileName:str = os.path.basename(filePath)
 
-        fileName = os.path.basename(filePath)
-
-        msg = Message()
-        msg.Level = "Debug"
-        msg.Message = message
-        msg.FileName = fileName
-        msg.LineNumber = lineNum
-        msg.MethodName = method
-
-        self.__LogMessage(msg)
-
+        __msg = Message("Debug",message,lineNum,fileName,method)
+        self.__LogMessage(__msg)
     
     def __LogMessage(self, msg:Message):
         """
         Hidden method that will check all endpoints to see if they will accept the current message.
 
         """
-        if self.__console.isValidEndpoint(msg.Level) == True:
-            self.__console.Write(msg)
-    
+        
+        if self.Console.isValidEndpoint(msg.Level) == True:
+            self.Console.Write(msg)
+   
 if __name__ == '__main__':
     pysaw

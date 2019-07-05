@@ -2,6 +2,8 @@
 import json
 import os
 
+#from .configConsole import ConsoleConfig 
+
 class Config:
     """
     Config class manages the configuration files for the module.
@@ -25,8 +27,10 @@ class Config:
             # Open the file, read it and store in memory
             with open(PathConfig) as jsonFile:
                 self.ActiveConfig = json.load(jsonFile)
-                
-    pass
+
+        # Enable Console Config
+        self.Console = ConsoleConfig(self.ActiveConfig)
+        pass
 
     def __baseJson(self):
         obj = {
@@ -39,8 +43,8 @@ class Config:
                         "Debug",
                         "information"
                     ],
-                    "MessageTemplate": "[$$Level$$] $$Message$$"
-
+                    "MessageTemplate": "[$$Level$$] $$Message$$",
+                    'ColoredOutput': True
                 }, 
                 'Txt':{
                     'Levels': [
@@ -54,8 +58,7 @@ class Config:
                         "Debug",
                         "Information"
                     ]
-                },
-                "Template": '$$Level$$, $$Message$$, $$File$$, $$Method$$, $$Line$$'
+                }
             }
         }
         return obj

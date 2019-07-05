@@ -5,16 +5,17 @@
             "Levels": [
                 "Emergency",
                 "Debug",
-                "information"
+                "Information"
             ],
-            "MessageTemplate": "[$$Level$$] $$Message$$ $$File$$ $$Line$$ $$Method$$"
+            "Template": "[$$Level$$] $$Message$$ $$File$$ $$Line$$ $$Method$$",
+            "IsOutputColored": true
         },
         "Txt": {
             "Levels": [
                 "Debug",
                 "Information"
             ],
-            "MessageTemplate": "$$Level$$ $$Message$$ $$File$$ $$Line$$ $$Method$$"
+            "Template": "$$Level$$ $$Message$$ $$File$$ $$Line$$ $$Method$$"
         }
     }
 }

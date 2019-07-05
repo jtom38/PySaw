@@ -1,7 +1,5 @@
 
 from .baseModule import baseEndPoint
-from .config import Config
-
 from ..Core.message import Message
 
 class Console(baseEndPoint):
@@ -9,12 +7,31 @@ class Console(baseEndPoint):
     About:
 
     """
-    def __init__(self, Config: Config ):
-        self.Config = Config
-        pass
+    def __init__(self, Config):
+        """
+        Config contains the json data that was extracted.
+        """
+        
+        # We have data in Config rather then null
+        # Try to find the values
+        try:
+            self.Levels = Config['PySaw']['Console']['Levels']
+        except Exception:
+            print("Unable to find PySaw.Console.Levels in the configuration file.")
+            self.Levels:str = ['']
+    
+        try:
+            self.Template = Config['PySaw']['Console']['Template']
+        except Exception:
+            print("Unable to find PySaw.Console.Template in the configuration file.")
+            self.Template:str = ''
 
-    # Replaceable property that we can load new messages into.
-    __msg:Message
+        try:
+            self.IsOutputColored = Config['PySaw']['Console']['IsOutputColored']
+        except Exception:
+            print("Unable to find PySaw.Console.IsOutputColored in the configuration file.")
+            self.IsOutputColored:bool = True
+        pass
 
     def isValidEndpoint(self, level:str):
         """
@@ -29,7 +46,7 @@ class Console(baseEndPoint):
         
         if level != "":
             # Exctract the allowed levels we will log
-            levels = self.Config.ActiveConfig['PySaw']['Console']['Levels']
+            levels = self.Levels
 
             # Loop though all of the values we will accept
             for v in levels:
@@ -43,8 +60,8 @@ class Console(baseEndPoint):
         return False
 
     def __FormatMessage(self):
-        f:str = self.Config.ActiveConfig['PySaw']['Console']['MessageTemplate']
-
+        f:str = self.Template
+        
         if f.__contains__('$$Level$$') == True:
             f = f.replace('$$Level$$', self.__msg.Level)
 
@@ -58,11 +75,11 @@ class Console(baseEndPoint):
             f = f.replace('$$File$$', self.__msg.FileName)
 
         if f.__contains__('$$Method$$') == True:
-
-            if not self.__msg.MethodName.__eq__('<module>'):
-                f = f.replace('$$Method$$', self.__msg.MethodName)
-            else:
-                f = f.replace('$$Method$$', '')
+            f=f.replace('$$Method$$', self.__msg.MethodName)
+            #if self.__msg.MethodName.__eq__('<module>') == False:
+             #   f = f.replace('$$Method$$', self.__msg.MethodName)
+            #else:
+            #    f = f.replace('$$Method$$', '')
 
         return f
 
